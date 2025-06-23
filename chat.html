@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova AI Chat - Teknova</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f7f7f8;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #202123;
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ai-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .company-tag {
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 768px;
+            margin: 0 auto;
+            width: 100%;
+            height: 100%;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .message {
+            display: flex;
+            gap: 1rem;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .user .avatar {
+            background: #19c37d;
+            color: white;
+        }
+
+        .bot .avatar {
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            color: white;
+        }
+
+        .message-content {
+            background: #fff;
+            padding: 1rem 1.25rem;
+            border-radius: 18px;
+            max-width: 70%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .user .message-content {
+            background: #19c37d;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .bot .message-content {
+            border-bottom-left-radius: 4px;
+            border: 1px solid #e5e5e5;
+        }
+
+        .input-container {
+            padding: 1rem;
+            background: #fff;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .input-form {
+            max-width: 768px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0.75rem;
+            background: #f4f4f4;
+            border-radius: 24px;
+            padding: 0.5rem;
+            border: 1px solid #e5e5e5;
+            transition: all 0.2s ease;
+        }
+
+        .input-form:focus-within {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+        }
+
+        .message-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            outline: none;
+            resize: none;
+            max-height: 120px;
+            min-height: 24px;
+            font-family: inherit;
+        }
+
+        .send-button {
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .send-button:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+
+        .send-button:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #9ca3af;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .welcome-message {
+            text-align: center;
+            color: #6b7280;
+            margin: 2rem 0;
+            padding: 2rem;
+        }
+
+        .welcome-message h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+
+        .welcome-message p {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .welcome-message .brand {
+            color: #ff6b6b;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .messages {
+                padding: 1rem 0.5rem;
+            }
+            
+            .input-container {
+                padding: 0.5rem;
+            }
+            
+            .message-content {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>
+            <div class="ai-icon">N</div>
+            Nova AI
+            <span class="company-tag">by Teknova</span>
+        </h1>
+    </div>
+
+    <div class="chat-container">
+        <div class="messages" id="messages">
+            <div class="welcome-message">
+                <h2>👋 Merhaba!</h2>
+                <p>Ben <span class="brand">Nova AI</span>, <strong>Teknova</strong> tarafından geliştirilen yapay zeka asistanınızım.</p>
+                <p>Size nasıl yardımcı olabilirim?</p>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <form class="input-form" id="chat-form">
+                <textarea 
+                    class="message-input" 
+                    id="prompt" 
+                    placeholder="Nova AI'ya bir mesaj yazın..." 
+                    rows="1"
+                    required
+                ></textarea>
+                <button type="submit" class="send-button" id="send-button">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('chat-form');
+        const promptInput = document.getElementById('prompt');
+        const messagesDiv = document.getElementById('messages');
+        const sendButton = document.getElementById('send-button');
+        let loading = false;
+
+        // Auto-resize textarea
+        promptInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Send on Enter (but allow Shift+Enter for new lines)
+        promptInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                form.dispatchEvent(new Event('submit'));
+            }
+        });
+
+        function addMessage(text, sender, isLoading = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar';
+            avatar.textContent = sender === 'user' ? 'S' : 'N';
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            
+            if (isLoading) {
+                content.innerHTML = `
+                    <div class="loading">
+                        <div class="typing-indicator">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                        Nova AI düşünüyor...
+                    </div>
+                `;
+            } else {
+                content.textContent = text;
+            }
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            messagesDiv.appendChild(messageDiv);
+            
+            // Remove welcome message on first user message
+            if (sender === 'user') {
+                const welcome = messagesDiv.querySelector('.welcome-message');
+                if (welcome) welcome.remove();
+            }
+            
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            return content;
+        }
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            if (loading) return;
+            
+            const prompt = promptInput.value.trim();
+            if (!prompt) return;
+            
+            // Add user message
+            addMessage(prompt, 'user');
+            
+            // Clear input and reset height
+            promptInput.value = '';
+            promptInput.style.height = 'auto';
+            
+            // Add loading message
+            const loadingContent = addMessage('', 'bot', true);
+            
+            loading = true;
+            sendButton.disabled = true;
+            
+            try {
+                const res = await fetch('http://localhost:8500/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt })
+                });
+                
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+                }
+                
+                const data = await res.json();
+                loadingContent.textContent = data.response || 'Üzgünüm, bir yanıt alamadım.';
+                
+            } catch (err) {
+                loadingContent.innerHTML = `
+                    <div style="color: #ef4444;">
+                        ❌ Bağlantı hatası: ${err.message}
+                        <br><small>Lütfen Nova AI sunucusunun çalıştığından emin olun.</small>
+                    </div>
+                `;
+            }
+            
+            loading = false;
+            sendButton.disabled = false;
+            promptInput.focus();
+        };
+
+        // Focus input on load
+        window.onload = () => promptInput.focus();
+    </script>
+</body>
+</html>
