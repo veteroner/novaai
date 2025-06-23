@@ -46,11 +46,9 @@ venv.bak/
 ehthumbs.db
 Thumbs.db
 
-# Nova AI Model Files (Large files)
-nova-ai-model/*.bin
-nova-ai-model/*.safetensors
-nova-ai-model/pytorch_model*.bin
-nova-ai-model/model*.safetensors
+# Nova AI Model Files (Entire folder - too large for GitHub)
+nova-ai-model/
+mistral-7b/
 
 # Logs
 *.log
