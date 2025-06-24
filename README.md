@@ -12,148 +12,202 @@ models:
 - mistralai/Mistral-7B-Instruct-v0.1
 ---
 
-# 🚀 Teknova Nova AI - Özgün Yapay Zeka Modeli
+# 🚀 Teknova Nova AI
 
-**Teknova** tarafından geliştirilen tamamen **özgün** Nova AI yapay zeka modeli.
-
-## 🌟 Özellikler
-
-- 🧠 **Özgün AI Teknolojisi**: Tamamen Teknova tarafından geliştirilmiş
-- ⚡ **Token Gerektirmez**: Hugging Face token'a ihtiyaç duymaz
-- 🎯 **Özelleştirilebilir**: Kendi modelinizi kullanın
-- 🚀 **Hızlı**: GPU optimizasyonu ile hızlı yanıtlar
-- 🌐 **Web Arayüzü**: Modern ve kullanıcı dostu
-- 💻 **Konsol Modu**: Terminal üzerinden kullanım
-- 📱 **API**: RESTful API desteği
-
-## 🏗️ Kurulum
-
-### 1️⃣ Gereksinimleri Yükleyin
-
-```bash
-pip install -r requirements.txt
-```
-
-### 2️⃣ Nova AI Modelinizi Hazırlayın
-
-```bash
-# Kendi Nova AI modelinizi nova-ai-model klasörüne yerleştirin
-mkdir nova-ai-model
-# Model dosyalarınızı bu klasöre kopyalayın
-```
-
-### 3️⃣ Uygulamayı Başlatın
-
-#### 🌐 Web Arayüzü
-```bash
-# Windows
-baslat_api.bat
-
-# Linux/Mac
-python app.py
-```
-
-#### 💻 Konsol Modu
-```bash
-# Windows  
-baslat_konsol.bat
-
-# Linux/Mac
-python main.py
-```
-
-#### 🔄 Gradio Arayüzü
-```bash
-python gradio_app.py
-```
-
-## 📂 Dosya Yapısı
-
-```
-NovaAI/
-├── 🐍 gradio_app.py          # Gradio web arayüzü
-├── 🌐 app.py                 # FastAPI web uygulaması  
-├── ⚡ api.py                 # API servisi
-├── 🖥️ main.py                # Konsol uygulaması
-├── 📂 nova-ai-model/         # Nova AI model dosyaları
-├── 🚀 baslat_api.bat         # Web başlatıcı
-├── 🖱️ baslat_konsol.bat      # Konsol başlatıcı
-├── 🔧 download_nova.py       # Model indirme scripti
-├── 📋 requirements.txt       # Python paketleri
-└── 📄 README.md             # Bu dosya
-```
-
-## 🔧 Konfigürasyon
-
-### Model Path Ayarlama
-
-```python
-# gradio_app.py içinde
-MODEL_NAME = "./nova-ai-model"  # Yerel model
-MODEL_PATH = "/content/nova-ai-model"  # Colab için
-```
-
-### API Kullanımı
-
-```bash
-# POST /chat
-curl -X POST "http://localhost:8000/chat" \
-     -H "Content-Type: application/json" \
-     -d '{"prompt": "Merhaba Nova AI!"}'
-```
-
-## 🎯 Kullanım Senaryoları
-
-- 💬 **Sohbet Botu**: Müşteri hizmetleri
-- 📝 **İçerik Üretimi**: Blog yazıları, makaleler
-- 🎓 **Eğitim**: Öğrenci asistanı
-- 💼 **İş Uygulamaları**: Rapor analizi
-- 🔍 **Araştırma**: Bilgi arama ve analiz
-
-## 🌐 Deployment
-
-### Google Colab
-```python
-# Nova_AI_Chat.ipynb dosyasını Colab'da açın
-# Tüm hücreleri çalıştırın
-```
-
-### Hugging Face Spaces
-```bash
-# gradio_app.py dosyasını Space'e yükleyin
-# Otomatik deploy edilir
-```
-
-### Yerel Sunucu
-```bash
-python app.py
-# http://localhost:8000 adresinde çalışır
-```
-
-## 🛡️ Güvenlik
-
-- 🔐 **Veri Güvenliği**: Verileriniz güvende
-- 🏠 **Yerel İşlem**: Model yerel olarak çalışır
-- 🚫 **Token Gerektirmez**: Harici bağımlılık yok
-
-## 📊 Performans
-
-- ⚡ **Hızlı Yanıt**: 2-5 saniye
-- 🧠 **Düşük Bellek**: 8-bit quantization
-- 🔥 **GPU Desteği**: CUDA optimizasyonu
-
-## 🤝 Ktkı
-
-Bu proje **Teknova** tarafından geliştirilmiştir.
-
-## 📄 Lisans
-
-Bu proje Teknova'ya aittir. Ticari kullanım için izin gereklidir.
-
-## 🚀 Teknova
-
-**Teknova** - Türkiye'nin öncü yapay zeka teknoloji şirketi
+**Özgün yapay zeka teknolojisi - Hugging Face Spaces'te!**
 
 ---
 
-🌟 **Tamamen özgün Nova AI teknolojisi ile güçlendirilmiştir**
+## 🌟 **Demo**
+
+Bu Hugging Face Spaces'te **Teknova Nova AI**'yi deneyebilirsiniz! 
+
+🔗 **Live Demo:** [https://huggingface.co/spaces/YOUR-USERNAME/nova-ai](https://huggingface.co/spaces/YOUR-USERNAME/nova-ai)
+
+---
+
+## 🎯 **Özellikler**
+
+### ✨ **Nova AI Yetenekleri**
+- 🧠 **Gelişmiş Dil Modeli** - Özgün Teknova teknolojisi
+- 💬 **Doğal Konuşma** - İnsan benzeri etkileşim  
+- 🎛️ **Ayarlanabilir Parametreler** - Temperature ve uzunluk kontrolü
+- ⚡ **Hızlı Yanıt** - Optimize edilmiş performans
+- 🌍 **Türkçe Desteği** - Ana dil Türkçe
+
+### 🛠️ **Teknik Özellikler**
+- **Model:** Teknova Nova AI (Özgün)
+- **Framework:** PyTorch + Transformers
+- **UI:** Gradio (Professional Design)
+- **Deployment:** Hugging Face Spaces
+- **GPU Support:** CUDA + CPU fallback
+
+---
+
+## 🚀 **Kullanım**
+
+### 💬 **Sohbet Etme**
+1. Mesajınızı text kutusuna yazın
+2. **Gönder** butonuna basın veya Enter'a basın
+3. Nova AI'nin yanıtını bekleyin
+
+### ⚙️ **Ayarlar**
+- **Maksimum Uzunluk:** Yanıtın ne kadar uzun olacağını belirler
+- **Temperature:** Yaratıcılık seviyesi (0.1 = tutarlı, 1.5 = yaratıcı)
+
+### 💡 **Örnek Sorular**
+- "Yapay zeka nedir?"
+- "Teknova hakkında bilgi ver"
+- "Bana yenilikçi proje fikirleri öner"
+- "Gelecekteki teknolojiler hakkında konuşalım"
+
+---
+
+## 🏗️ **Kendi Deployment'ınız**
+
+### 📋 **Requirements**
+```
+torch>=2.0.0
+transformers>=4.30.0
+gradio>=3.40.0
+accelerate>=0.20.0
+```
+
+### 🐳 **Docker ile Çalıştırma**
+```bash
+# Repository'yi clone edin
+git clone https://github.com/veteroner/novaai.git
+cd novaai
+
+# Docker image build edin
+docker build -t nova-ai .
+
+# Container'ı çalıştırın
+docker run -p 7860:7860 nova-ai
+```
+
+### 🔧 **Manuel Kurulum**
+```bash
+# Gerekli paketleri yükleyin
+pip install -r requirements.txt
+
+# Nova AI'yi başlatın
+python app.py
+```
+
+---
+
+## 📁 **Model Setup**
+
+Nova AI modeli için:
+
+1. **Model dosyalarını hazırlayın:**
+   ```bash
+   mkdir nova-ai-model
+   # Model dosyalarınızı bu klasöre yükleyin
+   ```
+
+2. **Hugging Face Spaces için:**
+   - Model dosyalarını `/data/nova-ai-model` klasörüne yükleyin
+   - Veya Git LFS ile repository'ye ekleyin
+
+---
+
+## 🎨 **UI Screenshots**
+
+### 🖥️ **Ana Arayüz**
+- Modern ve responsive tasarım
+- Koyu/açık tema desteği
+- Real-time sohbet deneyimi
+
+### 📱 **Mobil Uyumlu**
+- Tüm cihazlarda çalışır
+- Touch-friendly kontroller
+- Responsive layout
+
+---
+
+## ⚡ **Performance**
+
+### 🚀 **Hız**
+- **CPU Mode:** ~2-3 saniye yanıt
+- **GPU Mode:** ~0.5-1 saniye yanıt
+- **Memory Usage:** ~2-4 GB RAM
+
+### 📊 **Supported Configurations**
+- **Minimum:** 4GB RAM, 2 CPU cores
+- **Recommended:** 8GB RAM, 4 CPU cores, GPU
+- **Optimal:** 16GB RAM, 8 CPU cores, RTX 3080+
+
+---
+
+## 🤝 **Contributing**
+
+Nova AI'yi geliştirmek isterseniz:
+
+1. **Fork** edin: [GitHub Repository](https://github.com/veteroner/novaai)
+2. **Feature branch** oluşturun: `git checkout -b feature/amazing-feature`
+3. **Commit** edin: `git commit -m 'Add amazing feature'`
+4. **Push** edin: `git push origin feature/amazing-feature`  
+5. **Pull Request** açın
+
+Detaylı bilgi için: [CONTRIBUTING.md](https://github.com/veteroner/novaai/blob/main/CONTRIBUTING.md)
+
+---
+
+## 📜 **License**
+
+Bu proje **MIT License** altında lisanslanmıştır.
+
+**Teknova Nova AI** model dosyaları ve özgün algoritmaları Teknova'nın fikri mülkiyetidir.
+
+Detaylar: [LICENSE](https://github.com/veteroner/novaai/blob/main/LICENSE)
+
+---
+
+## 🔗 **Links**
+
+### 🌐 **Official**
+- **🏠 Website:** [Teknova.com](https://teknova.com)
+- **📧 Contact:** teknova@example.com
+
+### 💻 **Development**  
+- **📂 GitHub:** [veteroner/novaai](https://github.com/veteroner/novaai)
+- **🤗 Hugging Face:** [YOUR-USERNAME/nova-ai](https://huggingface.co/spaces/YOUR-USERNAME/nova-ai)
+- **🐳 Docker Hub:** [teknova/nova-ai](https://hub.docker.com/r/teknova/nova-ai)
+
+### 🔧 **CI/CD Status**
+[![CI/CD Pipeline](https://github.com/veteroner/novaai/workflows/🚀%20Nova%20AI%20CI/CD%20Pipeline/badge.svg)](https://github.com/veteroner/novaai/actions)
+[![Docker Build](https://img.shields.io/docker/build/teknova/nova-ai)](https://hub.docker.com/r/teknova/nova-ai)
+
+---
+
+## 💡 **About Teknova**
+
+**Teknova**, yapay zeka ve teknoloji alanında özgün çözümler geliştiren yenilikçi bir şirkettir.
+
+### 🎯 **Misyonumuz**
+Yapay zeka teknolojilerini herkes için erişilebilir kılmak ve özgün Türkçe AI çözümleri geliştirmek.
+
+### 🚀 **Vizyonumuz**  
+Türkiye'nin lider yapay zeka teknoloji şirketi olmak ve global pazarda özgün çözümlerimizle fark yaratmak.
+
+---
+
+## 🙏 **Teşekkürler**
+
+Nova AI'yi kullandığınız için teşekkürler! 
+
+**⭐ Star** vermeyi unutmayın ve **🔄 Share** ederek başkalarının da keşfetmesini sağlayın!
+
+---
+
+<div align="center">
+
+**🚀 Teknova Nova AI** - *Özgün yapay zeka teknolojisi*
+
+Made with ❤️ by **Teknova**
+
+[🌟 Star on GitHub](https://github.com/veteroner/novaai) | [🤗 Try on HF Spaces](https://huggingface.co/spaces/YOUR-USERNAME/nova-ai) | [📚 Read Docs](https://github.com/veteroner/novaai/wiki)
+
+</div>
