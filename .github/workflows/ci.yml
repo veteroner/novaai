@@ -1,0 +1,243 @@
+name: 🚀 Nova AI CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  release:
+    types: [ published ]
+
+env:
+  PYTHON_VERSION: "3.9"
+
+jobs:
+  # 🧪 Code Quality & Testing
+  test:
+    name: 🧪 Tests & Code Quality
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: 🐍 Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: 📦 Cache Dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          
+    - name: 🔧 Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov flake8 black mypy bandit safety
+        
+    - name: 🎨 Code Formatting Check (Black)
+      run: |
+        black --check --diff .
+        
+    - name: 🔍 Linting (Flake8)
+      run: |
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        
+    - name: 🔒 Security Check (Bandit)
+      run: |
+        bandit -r . -x tests/ -f json -o bandit-report.json || true
+        
+    - name: 🛡️ Dependency Security Check
+      run: |
+        safety check --json || true
+        
+    - name: 📊 Type Checking (MyPy)
+      run: |
+        mypy --install-types --non-interactive . || true
+        
+    - name: 🧪 Run Tests
+      run: |
+        pytest tests/ -v --cov=. --cov-report=xml --cov-report=term-missing
+        
+    - name: 📈 Upload Coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+
+  # 🔨 Build Check
+  build:
+    name: 🔨 Build Check
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: 🔧 Install Build Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build wheel
+        pip install -r requirements.txt
+        
+    - name: 🏗️ Build Package
+      run: |
+        python -m build
+        
+    - name: 📦 Check Package
+      run: |
+        python -m pip install dist/*.whl
+        python -c "import gradio_app; print('✅ Package imported successfully')"
+
+  # 🐳 Docker Build
+  docker:
+    name: 🐳 Docker Build
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: 🐳 Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: 🔑 Login to Docker Hub
+      if: github.event_name != 'pull_request'
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        
+    - name: 🏗️ Build and Push Docker Image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: |
+          teknova/nova-ai:latest
+          teknova/nova-ai:${{ github.sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+  # 📱 Deploy to Staging
+  deploy-staging:
+    name: 📱 Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [test, build]
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: 🚀 Deploy to Hugging Face Spaces (Staging)
+      run: |
+        echo "🚀 Deploying to HF Spaces Staging..."
+        # HF Spaces deployment script here
+        
+  # 🌟 Deploy to Production
+  deploy-production:
+    name: 🌟 Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [test, build, docker]
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: 🌟 Deploy to Production
+      run: |
+        echo "🌟 Deploying Nova AI to Production..."
+        # Production deployment script here
+
+  # 📊 Performance Tests
+  performance:
+    name: 📊 Performance Tests
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: 📊 Run Performance Tests
+      run: |
+        echo "📊 Running Nova AI performance tests..."
+        # Performance test scripts here
+        
+  # 🔄 Auto-merge Dependabot PRs
+  auto-merge:
+    name: 🔄 Auto-merge Dependabot PRs
+    runs-on: ubuntu-latest
+    needs: [test, build]
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    
+    steps:
+    - name: 🔄 Enable auto-merge for Dependabot PRs
+      run: gh pr merge --auto --merge "$PR_URL"
+      env:
+        PR_URL: ${{github.event.pull_request.html_url}}
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+  # 📢 Notifications
+  notify:
+    name: 📢 Notifications
+    runs-on: ubuntu-latest
+    needs: [test, build]
+    if: always()
+    
+    steps:
+    - name: 📢 Slack Notification
+      if: failure()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        channel: '#nova-ai-dev'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        
+    - name: 📧 Email Notification
+      if: failure()
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 587
+        username: ${{ secrets.EMAIL_USERNAME }}
+        password: ${{ secrets.EMAIL_PASSWORD }}
+        subject: 🚨 Nova AI CI/CD Failed
+        to: teknova-dev@example.com
+        from: Nova AI CI/CD
+        body: |
+          🚨 Nova AI CI/CD pipeline failed!
+          
+          Repository: ${{ github.repository }}
+          Branch: ${{ github.ref }}
+          Commit: ${{ github.sha }}
+          
+          Please check the logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} 

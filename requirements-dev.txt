@@ -1,0 +1,39 @@
+# 🧪 Testing
+pytest>=7.0.0
+pytest-cov>=4.0.0
+pytest-mock>=3.10.0
+pytest-asyncio>=0.21.0
+
+# 🎨 Code Formatting
+black>=23.0.0
+isort>=5.12.0
+
+# 🔍 Linting
+flake8>=6.0.0
+pylint>=2.17.0
+mypy>=1.3.0
+
+# 🔒 Security
+bandit>=1.7.5
+safety>=2.3.0
+
+# 📊 Performance
+memory-profiler>=0.60.0
+line-profiler>=4.0.0
+
+# 📚 Documentation
+sphinx>=6.2.0
+sphinx-rtd-theme>=1.2.0
+
+# 🔧 Development Tools
+pre-commit>=3.3.0
+commitizen>=3.2.0
+bumpversion>=0.6.0
+
+# 🐳 Docker
+docker>=6.1.0
+
+# 📦 Build
+build>=0.10.0
+wheel>=0.40.0
+twine>=4.0.0 
